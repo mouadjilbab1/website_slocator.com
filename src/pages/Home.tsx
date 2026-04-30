@@ -342,9 +342,9 @@ export default function Home() {
             </div>
             <div className="flex flex-col items-center w-full">
               <p className="font-semibold mb-4 text-lg">{t.planTerr}</p>
-              <button className="bg-gradient-to-r from-[#8eea9e] to-[#45c960] text-[#110222] font-bold py-3.5 px-8 rounded-full shadow-lg hover:scale-105 transition-all w-full md:w-auto">
+              <a href="/territory-planning" className="bg-gradient-to-r from-[#8eea9e] to-[#45c960] text-[#110222] font-bold py-3.5 px-8 rounded-full shadow-lg hover:scale-105 transition-all w-full md:w-auto text-center inline-block">
                 {t.startTerr}
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -523,7 +523,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-16 items-center mb-32">
                <div className="hidden md:flex flex-col gap-6 relative w-1/3 items-center justify-center">
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-[#fff8f5] rounded-full -z-10"></div>
-                 <img src="/assets/images/City-baby-90×50-1-e1741524807594-300x154.png" alt="City Baby" className="w-44 bg-white shadow-xl rounded-full p-6 hover:-translate-y-2 transition-transform" />
+                 <img src="/assets/images/City-baby-90x50-1-e1741524807594.png" alt="City Baby" className="w-44 bg-white shadow-xl rounded-full p-6 hover:-translate-y-2 transition-transform" />
                  <div className="w-32 h-32 bg-white shadow-xl rounded-full flex items-center justify-center font-serif text-3xl text-[#2b1055] italic hover:-translate-y-2 transition-transform">Touch</div>
                </div>
 
