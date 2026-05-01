@@ -1,56 +1,73 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight, ArrowLeft, CheckCircle2, Radio, Users, MonitorSmartphone, Quote } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react'
+import {
+  ArrowRight,
+  ArrowLeft,
+  CheckCircle2,
+  Radio,
+  Users,
+  MonitorSmartphone,
+  Quote,
+} from 'lucide-react'
 
 // =========================================
 // Scroll Reveal Animation Wrapper (محدث ليدعم اتجاه اللغتين)
 // =========================================
-const FadeInSection = ({ children, delay = 0, direction = 'up', isAr = false }: { children: React.ReactNode, delay?: number, direction?: 'up' | 'left' | 'right', isAr?: boolean }) => {
-  const [isVisible, setVisible] = useState(false);
-  const domRef = useRef<HTMLDivElement>(null);
+const FadeInSection = ({
+  children,
+  delay = 0,
+  direction = 'up',
+  isAr = false,
+}: {
+  children: React.ReactNode
+  delay?: number
+  direction?: 'up' | 'left' | 'right'
+  isAr?: boolean
+}) => {
+  const [isVisible, setVisible] = useState(false)
+  const domRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        setVisible(true);
-        observer.unobserve(domRef.current!);
-      }
-    }, { threshold: 0.1 });
-    
-    if (domRef.current) observer.observe(domRef.current);
-    return () => observer.disconnect();
-  }, []);
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          setVisible(true)
+          observer.unobserve(domRef.current!)
+        }
+      },
+      { threshold: 0.1 },
+    )
+
+    if (domRef.current) observer.observe(domRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   const getTransform = () => {
-    if (isVisible) return 'translate-x-0 translate-y-0';
-    if (direction === 'up') return 'translate-y-16';
+    if (isVisible) return 'translate-x-0 translate-y-0'
+    if (direction === 'up') return 'translate-y-16'
     // عكس اتجاه الحركة المادي عند استخدام اللغة العربية
-    if (direction === 'left') return isAr ? 'translate-x-16' : '-translate-x-16';
-    if (direction === 'right') return isAr ? '-translate-x-16' : 'translate-x-16';
-    return 'translate-y-16';
-  };
+    if (direction === 'left') return isAr ? 'translate-x-16' : '-translate-x-16'
+    if (direction === 'right') return isAr ? '-translate-x-16' : 'translate-x-16'
+    return 'translate-y-16'
+  }
 
   return (
-    <div 
-      ref={domRef} 
+    <div
+      ref={domRef}
       className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'} ${getTransform()}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
 export default function ServiceAreaInternetUsage() {
-  const [lang, setLang] = useState('en');
-
-  // جلب اللغة عند تحميل الصفحة والتمرير للأعلى
+  const [lang] = useState(() => localStorage.getItem('site_lang') || 'en')
   useEffect(() => {
-    const storedLang = localStorage.getItem('site_lang') || 'en';
-    setLang(storedLang);
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
 
-  const isAr = lang === 'ar';
+  const isAr = lang === 'ar'
 
   // -----------------------------------------
   // القاموس (Dictionary) لدعم اللغتين
@@ -59,65 +76,85 @@ export default function ServiceAreaInternetUsage() {
     ourSolutions: isAr ? 'حلولنا' : 'Our Solutions',
     titlePart1: isAr ? 'ذكاء ' : 'Area Internet Usage ',
     titlePart2: isAr ? 'استخدام الإنترنت' : 'Intelligence',
-    heroDesc: isAr 
-      ? 'يقدم "ذكاء استخدام الإنترنت" رؤى حول الاتصال الرقمي وأنماط استخدام الإنترنت عبر مناطق مختلفة. تُعد هذه الخدمة بالغة الأهمية لشركات الاتصالات وشركات التكنولوجيا ومقدمي الخدمات العامة الذين يهدفون إلى تحديد فرص الاتصال، وتخطيط المشاريع الرقمية، وتعزيز تقديم الخدمات بناءً على بيانات استخدام الإنترنت الإقليمية.' 
+    heroDesc: isAr
+      ? 'يقدم "ذكاء استخدام الإنترنت" رؤى حول الاتصال الرقمي وأنماط استخدام الإنترنت عبر مناطق مختلفة. تُعد هذه الخدمة بالغة الأهمية لشركات الاتصالات وشركات التكنولوجيا ومقدمي الخدمات العامة الذين يهدفون إلى تحديد فرص الاتصال، وتخطيط المشاريع الرقمية، وتعزيز تقديم الخدمات بناءً على بيانات استخدام الإنترنت الإقليمية.'
       : 'Area Internet Usage Intelligence offers insights into digital connectivity and internet usage patterns across different regions. This service is crucial for telecommunications companies, tech businesses, and public service providers aiming to identify connectivity opportunities, plan digital projects, and enhance service delivery based on regional internet usage data.',
     contactUs: isAr ? 'تواصل معنا الآن' : 'Contact Us Now',
     learnMore: isAr ? 'اعرف المزيد' : 'Learn More',
 
     keyFeatures: isAr ? 'الميزات الرئيسية' : 'Key Features',
-    featuresList: isAr ? [
-      "بيانات حول انتشار الإنترنت وأنماط الاستخدام واعتماد الأجهزة الرقمية.",
-      "تحليل جودة البنية التحتية وقدرتها الاستيعابية.",
-      "تحديد الفجوات الرقمية والمناطق غير المخدومة بشكل كافٍ.",
-      "التكامل مع البيانات الديموغرافية والاقتصادية للتدخلات المستهدفة."
-    ] : [
-      "Data on internet penetration, usage patterns, and digital device adoption.",
-      "Analysis of infrastructure quality and capacity.",
-      "Identification of digital divides and underserved areas.",
-      "Integration with demographic and economic data for targeted interventions."
-    ],
+    featuresList: isAr
+      ? [
+          'بيانات حول انتشار الإنترنت وأنماط الاستخدام واعتماد الأجهزة الرقمية.',
+          'تحليل جودة البنية التحتية وقدرتها الاستيعابية.',
+          'تحديد الفجوات الرقمية والمناطق غير المخدومة بشكل كافٍ.',
+          'التكامل مع البيانات الديموغرافية والاقتصادية للتدخلات المستهدفة.',
+        ]
+      : [
+          'Data on internet penetration, usage patterns, and digital device adoption.',
+          'Analysis of infrastructure quality and capacity.',
+          'Identification of digital divides and underserved areas.',
+          'Integration with demographic and economic data for targeted interventions.',
+        ],
 
     applications: isAr ? 'التطبيقات' : 'Applications',
     useCases: isAr ? 'حالات الاستخدام' : 'Use Cases',
     useCasesList: [
       {
         icon: <Radio size={32} />,
-        title: isAr ? "الاتصالات" : "Telecommunications",
-        desc: isAr ? "تخطيط توسعات الشبكة وترقيات الخدمة في المناطق ذات الطلب المرتفع." : "Plan network expansions and service upgrades in high-demand areas."
+        title: isAr ? 'الاتصالات' : 'Telecommunications',
+        desc: isAr
+          ? 'تخطيط توسعات الشبكة وترقيات الخدمة في المناطق ذات الطلب المرتفع.'
+          : 'Plan network expansions and service upgrades in high-demand areas.',
       },
       {
         icon: <Users size={32} />,
-        title: isAr ? "الخدمات العامة" : "Public Services",
-        desc: isAr ? "تطوير برامج محو الأمية الرقمية والخدمات الإلكترونية في المناطق منخفضة الاتصال." : "Develop digital literacy programs and e-services in low-connectivity regions."
+        title: isAr ? 'الخدمات العامة' : 'Public Services',
+        desc: isAr
+          ? 'تطوير برامج محو الأمية الرقمية والخدمات الإلكترونية في المناطق منخفضة الاتصال.'
+          : 'Develop digital literacy programs and e-services in low-connectivity regions.',
       },
       {
         icon: <MonitorSmartphone size={32} />,
-        title: isAr ? "شركات التكنولوجيا" : "Tech Companies",
-        desc: isAr ? "تحديد الأسواق للمنتجات والخدمات الرقمية بناءً على أنماط الاستخدام." : "Identify markets for digital products and services based on usage patterns."
-      }
+        title: isAr ? 'شركات التكنولوجيا' : 'Tech Companies',
+        desc: isAr
+          ? 'تحديد الأسواق للمنتجات والخدمات الرقمية بناءً على أنماط الاستخدام.'
+          : 'Identify markets for digital products and services based on usage patterns.',
+      },
     ],
 
     detTitle1: isAr ? 'توسيع شبكات الاتصالات' : 'Telecom Expansion',
-    detDesc1: isAr ? 'يحلل مزود الاتصالات أنماط استخدام الإنترنت لتحديد المناطق ذات الاتصال المنخفض، ويخطط لطرح شبكات النطاق العريض أو الهاتف المحمول الجديدة لتلبية الطلب.' : 'A telecom provider analyzes internet usage patterns to identify areas with low connectivity, planning new broadband or mobile network rollouts to meet demand.',
-    
-    detTitle2: isAr ? 'استراتيجية التجارة الإلكترونية' : 'E-commerce Strategy',
-    detDesc2: isAr ? 'يستخدم بائع تجزئة عبر الإنترنت بيانات استخدام الإنترنت لتوجيه جهود التسويق في المناطق ذات المشاركة الرقمية العالية، وتحسين الإنفاق الإعلاني والمبيعات.' : 'An online retailer uses internet usage data to target marketing efforts in areas with high digital engagement, optimizing ad spend and sales efforts.',
-    
-    detTitle3: isAr ? 'تخطيط السياسات العامة' : 'Public Policy Planning',
-    detDesc3: isAr ? 'تستخدم الوكالات الحكومية ذكاء استخدام الإنترنت لتحديد مشكلات الفجوة الرقمية، وتخطيط مبادرات لتحسين محو الأمية الرقمية والوصول في المجتمعات غير المخدومة.' : 'Government agencies use internet usage intelligence to identify digital divide issues, planning initiatives to improve digital literacy and access in underserved communities.',
+    detDesc1: isAr
+      ? 'يحلل مزود الاتصالات أنماط استخدام الإنترنت لتحديد المناطق ذات الاتصال المنخفض، ويخطط لطرح شبكات النطاق العريض أو الهاتف المحمول الجديدة لتلبية الطلب.'
+      : 'A telecom provider analyzes internet usage patterns to identify areas with low connectivity, planning new broadband or mobile network rollouts to meet demand.',
 
-    testTitle: isAr ? 'شاهد ماذا تقول الشركات الأخرى عنا' : 'See what other companies are saying about us',
-    testQuote: isAr 
-      ? '"لقد غيرت رؤى السوق العميقة من S-Locator استراتيجيتنا بالكامل. يمكننا الآن رؤية الساحة بأكملها ووضع أنفسنا بفعالية مطلقة."' 
+    detTitle2: isAr ? 'استراتيجية التجارة الإلكترونية' : 'E-commerce Strategy',
+    detDesc2: isAr
+      ? 'يستخدم بائع تجزئة عبر الإنترنت بيانات استخدام الإنترنت لتوجيه جهود التسويق في المناطق ذات المشاركة الرقمية العالية، وتحسين الإنفاق الإعلاني والمبيعات.'
+      : 'An online retailer uses internet usage data to target marketing efforts in areas with high digital engagement, optimizing ad spend and sales efforts.',
+
+    detTitle3: isAr ? 'تخطيط السياسات العامة' : 'Public Policy Planning',
+    detDesc3: isAr
+      ? 'تستخدم الوكالات الحكومية ذكاء استخدام الإنترنت لتحديد مشكلات الفجوة الرقمية، وتخطيط مبادرات لتحسين محو الأمية الرقمية والوصول في المجتمعات غير المخدومة.'
+      : 'Government agencies use internet usage intelligence to identify digital divide issues, planning initiatives to improve digital literacy and access in underserved communities.',
+
+    testTitle: isAr
+      ? 'شاهد ماذا تقول الشركات الأخرى عنا'
+      : 'See what other companies are saying about us',
+    testQuote: isAr
+      ? '"لقد غيرت رؤى السوق العميقة من S-Locator استراتيجيتنا بالكامل. يمكننا الآن رؤية الساحة بأكملها ووضع أنفسنا بفعالية مطلقة."'
       : '"S-Locator depth market insights transformed our strategy. We can now see the entire playing field and position ourselves effectively."',
     testName: isAr ? 'إليانور جيبسون' : 'Eleanor Gibson',
-    testRole: isAr ? 'ماركت ماسترز المحدودة \nرئيسة أبحاث السوق' : 'MarketMasters Ltd. \nHead of Market Research'
-  };
+    testRole: isAr
+      ? 'ماركت ماسترز المحدودة \nرئيسة أبحاث السوق'
+      : 'MarketMasters Ltd. \nHead of Market Research',
+  }
 
   return (
-    <div className="w-full font-sans text-gray-800 bg-white overflow-hidden" dir={isAr ? 'rtl' : 'ltr'}>
-      
+    <div
+      className="w-full font-sans text-gray-800 bg-white overflow-hidden"
+      dir={isAr ? 'rtl' : 'ltr'}
+    >
       {/* =========================================
           1. HERO SECTION
       ========================================= */}
@@ -127,23 +164,35 @@ export default function ServiceAreaInternetUsage() {
 
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-            
             <div className={`lg:w-1/2 text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}>
               <FadeInSection direction="left" isAr={isAr}>
                 <span className="inline-block py-1.5 px-4 rounded-full bg-white/10 border border-[#38e54d]/30 text-[#38e54d] text-sm font-bold tracking-widest uppercase mb-6">
                   {t.ourSolutions}
                 </span>
                 <h1 className="text-4xl md:text-5xl lg:text-[56px] font-black leading-tight mb-6">
-                  {t.titlePart1} <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38e54d] to-[#8eea9e]">{t.titlePart2}</span>
+                  {t.titlePart1}{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38e54d] to-[#8eea9e]">
+                    {t.titlePart2}
+                  </span>
                 </h1>
-                <p className={`text-gray-300 text-lg leading-relaxed mb-10 max-w-2xl mx-auto ${isAr ? 'lg:mx-0' : 'lg:mx-0'}`}>
+                <p
+                  className={`text-gray-300 text-lg leading-relaxed mb-10 max-w-2xl mx-auto ${isAr ? 'lg:mx-0' : 'lg:mx-0'}`}
+                >
                   {t.heroDesc}
                 </p>
-                <div className={`flex flex-col sm:flex-row items-center justify-center ${isAr ? 'lg:justify-end' : 'lg:justify-start'} gap-4`}>
-                  <a href="/contact" className={`bg-[#38e54d] hover:bg-[#2db83e] text-[#110222] font-bold py-3.5 px-8 rounded-full transition-transform hover:scale-105 shadow-[0_10px_20px_rgba(56,229,77,0.3)] flex items-center gap-2 w-full sm:w-auto justify-center ${isAr ? 'flex-row-reverse' : ''}`}>
+                <div
+                  className={`flex flex-col sm:flex-row items-center justify-center ${isAr ? 'lg:justify-end' : 'lg:justify-start'} gap-4`}
+                >
+                  <a
+                    href="/contact"
+                    className={`bg-[#38e54d] hover:bg-[#2db83e] text-[#110222] font-bold py-3.5 px-8 rounded-full transition-transform hover:scale-105 shadow-[0_10px_20px_rgba(56,229,77,0.3)] flex items-center gap-2 w-full sm:w-auto justify-center ${isAr ? 'flex-row-reverse' : ''}`}
+                  >
                     {t.contactUs} {isAr ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
                   </a>
-                  <a href="#features" className="bg-transparent border border-white/30 hover:border-white/80 text-white font-bold py-3.5 px-8 rounded-full transition-all w-full sm:w-auto justify-center flex">
+                  <a
+                    href="#features"
+                    className="bg-transparent border border-white/30 hover:border-white/80 text-white font-bold py-3.5 px-8 rounded-full transition-all w-full sm:w-auto justify-center flex"
+                  >
                     {t.learnMore}
                   </a>
                 </div>
@@ -155,15 +204,14 @@ export default function ServiceAreaInternetUsage() {
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#38e54d] to-[#9b51e0] rounded-full blur-[80px] opacity-20 animate-pulse"></div>
                   {/* استبدال رابط ووردبريس بمسار محلي */}
-                  <img 
-                    src="/assets/images/png-32.png" 
-                    alt="Internet Usage Intelligence Icon" 
+                  <img
+                    src="/assets/images/png-32.png"
+                    alt="Internet Usage Intelligence Icon"
                     className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
                   />
                 </div>
               </FadeInSection>
             </div>
-
           </div>
         </div>
       </section>
@@ -175,7 +223,9 @@ export default function ServiceAreaInternetUsage() {
         <div className="max-w-7xl mx-auto px-4">
           <FadeInSection>
             <div className="text-center mb-16">
-              <h2 className="text-[#2b1055] text-4xl md:text-[42px] font-black mb-4">{t.keyFeatures}</h2>
+              <h2 className="text-[#2b1055] text-4xl md:text-[42px] font-black mb-4">
+                {t.keyFeatures}
+              </h2>
               <div className="w-24 h-1.5 bg-[#38e54d] mx-auto rounded-full"></div>
             </div>
           </FadeInSection>
@@ -184,7 +234,9 @@ export default function ServiceAreaInternetUsage() {
             {t.featuresList.map((feature, idx) => (
               <FadeInSection key={idx} delay={idx * 150} direction="up" isAr={isAr}>
                 <div className="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex items-start gap-4 hover:-translate-y-2 transition-transform duration-300 h-full">
-                  <div className={`bg-[#e0fbc9] p-3 rounded-full text-[#2db83e] shrink-0 mt-1 ${isAr ? 'ml-2' : 'mr-2'}`}>
+                  <div
+                    className={`bg-[#e0fbc9] p-3 rounded-full text-[#2db83e] shrink-0 mt-1 ${isAr ? 'ml-2' : 'mr-2'}`}
+                  >
                     <CheckCircle2 size={24} strokeWidth={2.5} />
                   </div>
                   <p className="text-gray-700 font-medium text-lg leading-relaxed">{feature}</p>
@@ -202,8 +254,12 @@ export default function ServiceAreaInternetUsage() {
         <div className="max-w-7xl mx-auto px-4">
           <FadeInSection>
             <div className="text-center mb-16">
-              <h6 className="text-[#38e54d] font-bold tracking-widest text-sm mb-3 uppercase">{t.applications}</h6>
-              <h2 className="text-[#2b1055] text-4xl md:text-[42px] font-black mb-4">{t.useCases}</h2>
+              <h6 className="text-[#38e54d] font-bold tracking-widest text-sm mb-3 uppercase">
+                {t.applications}
+              </h6>
+              <h2 className="text-[#2b1055] text-4xl md:text-[42px] font-black mb-4">
+                {t.useCases}
+              </h2>
             </div>
           </FadeInSection>
 
@@ -228,24 +284,25 @@ export default function ServiceAreaInternetUsage() {
       ========================================= */}
       <section className="py-20 bg-[#fafbfc] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 space-y-32">
-          
           {/* Row 1: Telecom Expansion */}
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2 w-full">
               <FadeInSection direction="left" isAr={isAr}>
-                <img 
-                  src="/assets/images/png-30.png" 
-                  alt="Telecom Expansion" 
-                  className="w-full max-w-[500px] mx-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700" 
+                <img
+                  src="/assets/images/png-30.png"
+                  alt="Telecom Expansion"
+                  className="w-full max-w-[500px] mx-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700"
                 />
               </FadeInSection>
             </div>
-            <div className={`lg:w-1/2 w-full text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}>
+            <div
+              className={`lg:w-1/2 w-full text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}
+            >
               <FadeInSection direction="right" isAr={isAr}>
-                <h2 className="text-[#2b1055] text-3xl md:text-4xl font-black mb-6">{t.detTitle1}</h2>
-                <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                  {t.detDesc1}
-                </p>
+                <h2 className="text-[#2b1055] text-3xl md:text-4xl font-black mb-6">
+                  {t.detTitle1}
+                </h2>
+                <p className="text-gray-600 text-lg leading-relaxed mb-8">{t.detDesc1}</p>
               </FadeInSection>
             </div>
           </div>
@@ -254,19 +311,21 @@ export default function ServiceAreaInternetUsage() {
           <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
             <div className="lg:w-1/2 w-full">
               <FadeInSection direction="right" isAr={isAr}>
-                <img 
-                  src="/assets/images/png-31.png" 
-                  alt="E-commerce Strategy" 
-                  className="w-full max-w-[500px] mx-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700" 
+                <img
+                  src="/assets/images/png-31.png"
+                  alt="E-commerce Strategy"
+                  className="w-full max-w-[500px] mx-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700"
                 />
               </FadeInSection>
             </div>
-            <div className={`lg:w-1/2 w-full text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}>
+            <div
+              className={`lg:w-1/2 w-full text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}
+            >
               <FadeInSection direction="left" isAr={isAr}>
-                <h2 className="text-[#2b1055] text-3xl md:text-4xl font-black mb-6">{t.detTitle2}</h2>
-                <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                  {t.detDesc2}
-                </p>
+                <h2 className="text-[#2b1055] text-3xl md:text-4xl font-black mb-6">
+                  {t.detTitle2}
+                </h2>
+                <p className="text-gray-600 text-lg leading-relaxed mb-8">{t.detDesc2}</p>
               </FadeInSection>
             </div>
           </div>
@@ -275,23 +334,24 @@ export default function ServiceAreaInternetUsage() {
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2 w-full">
               <FadeInSection direction="left" isAr={isAr}>
-                <img 
-                  src="/assets/images/png-32.png" 
-                  alt="Public Policy Planning" 
-                  className="w-full max-w-[500px] mx-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700" 
+                <img
+                  src="/assets/images/png-32.png"
+                  alt="Public Policy Planning"
+                  className="w-full max-w-[500px] mx-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700"
                 />
               </FadeInSection>
             </div>
-            <div className={`lg:w-1/2 w-full text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}>
+            <div
+              className={`lg:w-1/2 w-full text-center ${isAr ? 'lg:text-right' : 'lg:text-left'}`}
+            >
               <FadeInSection direction="right" isAr={isAr}>
-                <h2 className="text-[#2b1055] text-3xl md:text-4xl font-black mb-6">{t.detTitle3}</h2>
-                <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                  {t.detDesc3}
-                </p>
+                <h2 className="text-[#2b1055] text-3xl md:text-4xl font-black mb-6">
+                  {t.detTitle3}
+                </h2>
+                <p className="text-gray-600 text-lg leading-relaxed mb-8">{t.detDesc3}</p>
               </FadeInSection>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -303,22 +363,25 @@ export default function ServiceAreaInternetUsage() {
         <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
           <FadeInSection>
             <h2 className="text-white text-3xl md:text-4xl font-black mb-16">{t.testTitle}</h2>
-            
+
             <div className="bg-white/5 border border-white/10 backdrop-blur-md p-10 md:p-16 rounded-[40px] relative">
-              <Quote className={`absolute top-8 ${isAr ? 'right-8' : 'left-8'} text-[#38e54d]/20 w-16 h-16`} />
+              <Quote
+                className={`absolute top-8 ${isAr ? 'right-8' : 'left-8'} text-[#38e54d]/20 w-16 h-16`}
+              />
               <p className="text-xl md:text-2xl text-gray-300 font-medium italic leading-relaxed mb-10 relative z-10">
                 {t.testQuote}
               </p>
               <div className="flex flex-col items-center justify-center">
                 <div className="w-16 h-1 bg-[#38e54d] mb-6 rounded-full"></div>
                 <h4 className="text-white font-bold text-xl mb-1">{t.testName}</h4>
-                <p className="text-[#38e54d] font-semibold text-sm whitespace-pre-line">{t.testRole}</p>
+                <p className="text-[#38e54d] font-semibold text-sm whitespace-pre-line">
+                  {t.testRole}
+                </p>
               </div>
             </div>
           </FadeInSection>
         </div>
       </section>
-
     </div>
-  );
+  )
 }
