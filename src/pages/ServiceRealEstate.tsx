@@ -156,7 +156,7 @@ export default function ServiceRealEstate() {
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#38e54d] to-[#9b51e0] rounded-full blur-[80px] opacity-20 animate-pulse"></div>
                   {/* استبدال رابط الصورة بمسار محلي */}
                   <img 
-                    src="/assets/images/icons-03-1024x1024.png" 
+                    src="/assets/images/icon-16.png" 
                     alt="Real Estate Pricing Intelligence Icon" 
                     className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
                   />
