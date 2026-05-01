@@ -27,7 +27,6 @@ const Typewriter = ({ words, isAr }: { words: string[]; isAr: boolean }) => {
       }
     }
 
-    // تم التعديل هنا: استخدام const بدلاً من let
     const timer = setTimeout(handleType, typingSpeed)
     return () => clearTimeout(timer)
   }, [text, isDeleting, loopNum, typingSpeed, words])

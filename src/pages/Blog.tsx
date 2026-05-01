@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   Search,
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 // =========================================
 // Helper Component: Fade In Animation
@@ -42,15 +43,10 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode; del
   )
 }
 
-// =========================================
-// Main Blog Page Component
-// =========================================
 export default function Blog() {
   const [lang] = useState(() => localStorage.getItem('site_lang') || 'en')
-
-  // توليد الأرقام لمرة واحدة عند تحميل الصفحة بدون استخدام useEffect
-  const [randomCounts] = useState<number[]>(() => 
-    Array.from({ length: 5 }, () => Math.floor(Math.random() * 20) + 1)
+  const [randomCounts] = useState<number[]>(() =>
+    Array.from({ length: 5 }, () => Math.floor(Math.random() * 20) + 1),
   )
 
   useEffect(() => {
@@ -59,9 +55,6 @@ export default function Blog() {
 
   const isAr = lang === 'ar'
 
-  // -----------------------------------------
-  // القاموس (Dictionary) لدعم اللغتين
-  // -----------------------------------------
   const t = {
     heroBadge: isAr ? 'مركز المعرفة' : 'Knowledge Hub',
     heroTitle1: isAr ? 'رؤى و' : 'Insights & ',
@@ -93,7 +86,7 @@ export default function Blog() {
       : ['S-LOC', 'Riyadh', 'Jeddah', 'Pharmacies', 'Demographics', 'Expansion', 'SaaS', 'ROI'],
   }
 
-  // 1. المقال الأول (الرئيسي - Featured) مع دعم اللغتين وصور محلية
+  
   const featuredPost = {
     title: isAr
       ? 'أفضل طريقة لإجراء دراسة جدوى في الرياض (الدليل الشامل 2026)'
@@ -105,10 +98,9 @@ export default function Blog() {
     date: isAr ? '17 فبراير 2026' : 'Feb 17, 2026',
     author: isAr ? 'فريق البحث' : 'Research Team',
     image: '/assets/images/Feasibility-Study-in-Riyadh-768x419.jpg',
-    link: '/article-1',
+    link: '/article/feasibility-study-riyadh-guide', 
   }
 
-  // 2. باقي المقالات (الشبكة - Regular Posts) مع دعم اللغتين وصور محلية
   const regularPosts = [
     {
       id: 2,
@@ -122,7 +114,7 @@ export default function Blog() {
       date: isAr ? '16 فبراير 2026' : 'Feb 16, 2026',
       author: isAr ? 'فريق البحث' : 'Research Team',
       image: '/assets/images/Cloud-kitchen-feasibility-Saudi-Arabia-768x429.jpg',
-      link: '/article-2',
+      link: '/article/golden-zones-riyadh', 
     },
     {
       id: 3,
@@ -136,7 +128,7 @@ export default function Blog() {
       date: isAr ? '15 فبراير 2026' : 'Feb 15, 2026',
       author: isAr ? 'فريق البحث' : 'Research Team',
       image: '/assets/images/Feasibility-study-company-Jeddah-768x429.jpg',
-      link: '/article-3',
+      link: '/article/feasibility-study-jeddah', 
     },
     {
       id: 4,
@@ -150,7 +142,7 @@ export default function Blog() {
       date: isAr ? '15 فبراير 2026' : 'Feb 15, 2026',
       author: isAr ? 'فريق البحث' : 'Research Team',
       image: '/assets/images/Site-analysis-for-pharmacy-in-Riyadh-768x429.jpg',
-      link: '/article-4',
+      link: '/article/pharmacy-site-analysis-riyadh', 
     },
   ]
 
@@ -186,7 +178,7 @@ export default function Blog() {
           <div className="lg:w-[65%]">
             {/* Featured Post */}
             <FadeInSection>
-              <a href={featuredPost.link} className="block mb-16 group cursor-pointer">
+              <Link to={featuredPost.link} className="block mb-16 group cursor-pointer">
                 <div className="relative overflow-hidden rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.15)] mb-8 h-[350px] md:h-[450px]">
                   <img
                     src={featuredPost.image}
@@ -239,15 +231,15 @@ export default function Blog() {
                     )}
                   </span>
                 </div>
-              </a>
+              </Link>
             </FadeInSection>
 
             {/* Grid of Regular Posts */}
             <div className="grid sm:grid-cols-2 gap-8">
               {regularPosts.map((post, idx) => (
                 <FadeInSection key={post.id} delay={idx * 150}>
-                  <a
-                    href={post.link}
+                  <Link
+                    to={post.link}
                     className="bg-white rounded-[20px] shadow-sm border border-gray-100 hover:shadow-[0_15px_30px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-300 overflow-hidden group flex flex-col h-full cursor-pointer"
                   >
                     <div className="h-[220px] overflow-hidden relative">
@@ -291,7 +283,7 @@ export default function Blog() {
                         )}
                       </span>
                     </div>
-                  </a>
+                  </Link>
                 </FadeInSection>
               ))}
             </div>
@@ -300,7 +292,6 @@ export default function Blog() {
           {/* RIGHT: Sidebar */}
           <div className="lg:w-[35%]">
             <div className="sticky top-28 space-y-10">
-              {/* Search Box */}
               <FadeInSection delay={100}>
                 <div className="bg-white p-8 rounded-[20px] shadow-sm border border-gray-100">
                   <h4 className="text-[18px] font-black text-[#2b1055] mb-6 flex items-center gap-2 uppercase tracking-wide">
@@ -321,7 +312,6 @@ export default function Blog() {
                 </div>
               </FadeInSection>
 
-              {/* Categories */}
               <FadeInSection delay={200}>
                 <div className="bg-white p-8 rounded-[20px] shadow-sm border border-gray-100">
                   <h4 className="text-[18px] font-black text-[#2b1055] mb-6 uppercase tracking-wide">
@@ -331,7 +321,7 @@ export default function Blog() {
                     {t.categories.map((cat, idx) => (
                       <li key={idx}>
                         <a
-                          href="#"
+                          href="#!"
                           className="flex justify-between items-center text-gray-600 font-bold text-[14px] hover:text-[#100324] transition-colors p-3 hover:bg-[#38e54d]/10 rounded-lg group"
                         >
                           <span>{cat}</span>
@@ -345,7 +335,6 @@ export default function Blog() {
                 </div>
               </FadeInSection>
 
-              {/* Popular Tags */}
               <FadeInSection delay={300}>
                 <div className="bg-white p-8 rounded-[20px] shadow-sm border border-gray-100">
                   <h4 className="text-[18px] font-black text-[#2b1055] mb-6 uppercase tracking-wide">
@@ -355,7 +344,7 @@ export default function Blog() {
                     {t.tags.map((tag, idx) => (
                       <a
                         key={idx}
-                        href="#"
+                        href="#!"
                         className="px-4 py-2 bg-gray-50 border border-gray-200 text-gray-600 font-bold text-[12px] uppercase tracking-wider rounded-md hover:bg-[#100324] hover:text-[#38e54d] hover:border-[#100324] transition-all"
                       >
                         #{tag}
