@@ -432,7 +432,7 @@ export const articlesData: Record<string, ArticleData> = {
           </p>
 
           <img
-            src="/assets/images/Cloud-kitchen-feasibility-Saudi-Arabia-1-1024x572.jpg"
+            src="/assets/images/Cloud-kitchen-feasibility-Saudi-Arabia-768x429.jpg"
             alt="Cloud Kitchen Feasibility Saudi Arabia"
             className="w-full rounded-2xl shadow-lg border border-gray-100 mb-10"
           />
@@ -558,7 +558,7 @@ export const articlesData: Record<string, ArticleData> = {
           </p>
 
           <img
-            src="/assets/images/Feasibility-study-company-Jeddah-1-1024x572.jpg"
+            src="/assets/images/Feasibility-study-company-Jeddah-768x429.jpg"
             alt="Feasibility Study Jeddah Dashboard"
             className="w-full rounded-2xl shadow-lg border border-gray-100 mb-10"
           />
@@ -685,7 +685,7 @@ export const articlesData: Record<string, ArticleData> = {
           </p>
 
           <img
-            src="/assets/images/Site-analysis-for-pharmacy-in-Riyadh-1-1024x572.jpg"
+            src="/assets/images/Site-analysis-for-pharmacy-in-Riyadh-768x429.jpg"
             alt="Pharmacy Site Analysis Riyadh Dashboard"
             className="w-full rounded-2xl shadow-lg border border-gray-100 mb-10"
           />
