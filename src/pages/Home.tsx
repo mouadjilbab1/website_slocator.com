@@ -1,8 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Maximize2, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
-// --- 1. Typewriter Animation Component ---
-const Typewriter = ({ words, isAr }: { words: string[]; isAr: boolean }) => {
+// --- Interfaces for strict TypeScript checking ---
+interface TypewriterProps {
+  words: string[]
+  isAr: boolean
+}
+
+interface AnimatedCounterProps {
+  end: number
+  duration?: number
+}
+
+interface FadeInSectionProps {
+  children: React.ReactNode
+  delay?: number
+}
+
+// --- Helper Components ---
+// 1. Typewriter Animation Component
+const Typewriter: React.FC<TypewriterProps> = ({ words, isAr }) => {
   const [text, setText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [loopNum, setLoopNum] = useState(0)
@@ -35,8 +53,8 @@ const Typewriter = ({ words, isAr }: { words: string[]; isAr: boolean }) => {
   return <span className={`text-[#38e54d] border-[#38e54d] ${borderClass}`}>{text}</span>
 }
 
-// --- 2. Smart Animated Counter ---
-const AnimatedCounter = ({ end, duration = 2000 }: { end: number; duration?: number }) => {
+// 2. Smart Animated Counter
+const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ end, duration = 2000 }) => {
   const [count, setCount] = useState(0)
   const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
@@ -66,8 +84,8 @@ const AnimatedCounter = ({ end, duration = 2000 }: { end: number; duration?: num
   return <span ref={ref}>{count.toLocaleString()}</span>
 }
 
-// --- 3. Scroll Reveal Animation Wrapper ---
-const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+// 3. Scroll Reveal Animation Wrapper
+const FadeInSection: React.FC<FadeInSectionProps> = ({ children, delay = 0 }) => {
   const [isVisible, setVisible] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
 
@@ -97,130 +115,35 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode; del
 }
 
 export default function Home() {
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
   const [popupImage, setPopupImage] = useState<string | null>(null)
-
-  // -----------------------------------------------------
-  // نظام اللغات (يقرأ اللغة من المتصفح)
-  // -----------------------------------------------------
-  const [lang] = useState(() => localStorage.getItem('site_lang') || 'en')
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  const isAr = lang === 'ar'
+  // --- Data Definitions ---
+  // Note: For full compliance, 'heroWords', 'services', and 'industries' 
+  // text should eventually move to locales.json, but they are localized here dynamically for now.
+  const heroWords = isAr
+    ? [
+        'الدفاع والأمن',
+        'العقارات',
+        'الخدمات اللوجستية',
+        'الرعاية الصحية',
+        'التسويق',
+        'الأغذية والمشروبات',
+      ]
+    : [
+        'Defense & Security',
+        'Real Estate',
+        'Logistics',
+        'Health Care',
+        'Marketing',
+        'Food & Beverages',
+      ]
 
-  // القاموس (Dictionary) يحتوي على اللغتين
-  const t = {
-    heroPre: isAr ? 'اتخذ قراراتك في ' : 'Make ',
-    heroPost: isAr ? ' خلال دقائق' : ' Decisions in Minutes',
-    heroWords: isAr
-      ? [
-          'الدفاع والأمن',
-          'العقارات',
-          'الخدمات اللوجستية',
-          'الرعاية الصحية',
-          'التسويق',
-          'الأغذية والمشروبات',
-        ]
-      : [
-          'Defense & Security',
-          'Real Estate',
-          'Logistics',
-          'Health Care',
-          'Marketing',
-          'Food & Beverages',
-        ],
-    heroTitle: isAr
-      ? 'تحسين القرارات باستخدام ذكاء البيانات'
-      : 'Optimizing Decisions with Data Intelligence',
-    heroDesc: isAr
-      ? 'استفد من ذكاء البيانات المتقدم لاتخاذ قرارات مدروسة وفعالة، وتحقيق نتائج مبهرة ومؤثرة على أرض الواقع.'
-      : 'Leverage advanced data intelligence to make informed, efficient decisions and achieve impactful results.',
-    heroPowered: isAr
-      ? 'بدعم من نورثرن أناليتكس - قسم البيانات والذكاء الاصطناعي'
-      : 'Powered by Northern Analytics - Data & AI Division',
-    clickHere: isAr ? 'اضغط هنا' : 'Click here',
-    whatLook: isAr ? 'ما الذي تتطلع للقيام به؟' : 'What are you looking to do?',
-    findLoc: isAr ? 'إيجاد أو تقييم موقع تجاري' : 'Find or validate a commercial location',
-    exploreLoc: isAr ? 'استكشف ذكاء المواقع' : 'Explore Location Intelligence',
-    planTerr: isAr
-      ? 'تخطيط مناطق المبيعات أو مسارات التوصيل'
-      : 'Plan sales territories or delivery routes',
-    startTerr: isAr ? 'ابدأ تخطيط المناطق' : 'Start Territory Planning',
-
-    whatWeOffer: isAr ? 'ما نقدمه' : 'WHAT WE OFFER',
-    whyChoose: isAr ? 'لماذا يجب أن تختارنا؟' : 'WHY YOU SHOULD CHOOSE US',
-    chooseDesc: isAr
-      ? 'اختيارك لنا يعني الشراكة مع خبراء يضعون نجاحك في المقام الأول. نقدم حلولاً مخصصة، استراتيجيات مبتكرة، والتزاماً راسخاً بتقديم نتائج استثنائية.'
-      : 'Choosing us means partnering with experts who prioritize your success. We offer tailored solutions, innovative strategies, and unwavering commitment to delivering exceptional results.',
-
-    achievements: isAr ? 'إنجازاتنا' : 'ACHIEVEMENTS',
-    achievementsTitle: isAr
-      ? 'أتمتة الرؤى الجيومكانية للشركات والجهات الحكومية'
-      : 'Automate geospatial insights for businesses and governments',
-    achievementsDesc: isAr
-      ? 'نحتفل بمحطات الابتكار والتميز، تعكس إنجازاتنا التزامنا التام بتقديم حلول مؤثرة ودفع عجلة النجاح لجميع عملائنا.'
-      : 'Celebrating milestones of innovation and excellence, our achievements reflect our commitment to delivering impactful solutions and driving success for our clients.',
-    getStarted: isAr ? 'ابدأ الآن' : 'Get Started',
-    projectsCompleted: isAr ? 'مشاريع مكتملة' : 'Projects Completed',
-    teamMembers: isAr ? 'خبراء الفريق' : 'Team Members',
-    satisfiedClients: isAr ? 'عملاء راضون' : 'Satisfied Clients',
-    awardsWin: isAr ? 'جوائز عالمية' : 'Awards Win',
-
-    yearsExp: isAr ? 'سنوات من الخبرة' : 'Years of Experience',
-    compEdgeTitle: isAr ? 'ميزة تنافسية عبر مختلف القطاعات' : 'Competitive Edge by Industries',
-    compEdgeSub: isAr
-      ? 'بياناتنا تمكّن الشركات من النمو بشكل أذكى وأسرع وأكثر استدامة.'
-      : 'Our data empowers businesses to grow smarter, faster, and more sustainably.',
-    compEdgeDesc: isAr
-      ? 'بفضل سنوات من الخبرة والتكنولوجيا المتطورة، والفهم العميق للقطاعات التي نخدمها، نحن شريكك الاستراتيجي في إطلاق الإمكانات الكاملة لعملك. نحن لا نقدم بيانات فحسب — بل نساعدك على تحويل هذه الرؤى إلى نمو وكفاءة وربحية.'
-      : "With years of experience, cutting-edge technology, and a deep understanding of the industries we serve, we are your strategic partner in unlocking the full potential of your business. We don't just provide data—we help you turn insights into growth, efficiency, and profitability.",
-    readMore: isAr ? 'اقرأ المزيد' : 'Read More',
-
-    tailoredTitle: isAr ? 'حلول مخصصة لقادة الصناعة' : 'Tailored Solutions for Industry Leaders',
-    tailoredDesc: isAr
-      ? 'رؤى مبنية على البيانات لقطاعات التوزيع، اللوجستيات، العقارات، الرعاية الصحية والمزيد.'
-      : 'Data-driven insights for distribution, logistics, real estate, healthcare, and more.',
-
-    recentProjects: isAr ? 'أحدث المشاريع' : 'RECENT PROJECTS',
-    recentDesc1: isAr
-      ? 'اكتشف أحدث مشاريعنا التي تبرز الابتكار والخبرة والالتزام الدائم بتقديم نتائج استثنائية.'
-      : 'Discover our latest projects that showcase innovation, expertise, and a commitment to delivering exceptional results.',
-    recentTitle: isAr
-      ? 'خدمات المستهلكين، التجزئة، والضيافة'
-      : 'Consumer Services, Retail, and Hospitality',
-    transformTitle: isAr
-      ? 'تحويل الاحتمالات إلى حلول عملية'
-      : 'Transform Possibilities into Practical Solutions',
-    transformDesc: isAr
-      ? 'اكتشف كيف يمكن تطبيق حلولنا المتطورة عبر مختلف الصناعات لحل التحديات، وتحسين العمليات، ودفع عجلة النمو المستدام.'
-      : 'Explore how our cutting-edge solutions can be applied across various industries to solve challenges, optimize operations, and drive sustainable growth.',
-
-    testTitle: isAr ? 'ماذا يقول الناس عن خدماتنا؟' : 'What People Are Saying About our Product',
-    testDesc: isAr
-      ? '"كان العمل مع S-Locator نقطة تحول حقيقية لعملنا. لقد ساهمت تحليلاتهم المتقدمة وحلول الذكاء المكاني في تبسيط عملياتنا بشكل كبير وزيادة العائد على الاستثمار. الفريق محترف ومتجاوب ومهتم حقاً بنجاحنا. نوصي بهم بشدة!"'
-      : 'Working with S-Locator has been a game-changer for our business. Their advanced analytics and location intelligence solutions have streamlined our operations and significantly boosted our ROI. The team is professional, responsive, and truly invested in our success. Highly recommended!',
-    clientName: isAr ? 'عبدالله خالد' : 'John Doe',
-    clientRole: isAr ? 'عميل' : 'Client',
-
-    contactInfo: isAr ? 'معلومات الاتصال' : 'CONTACT INFO',
-    getInTouch: isAr ? 'تواصل معنا' : 'GET IN TOUCH',
-    location: isAr ? 'الموقع:' : 'Location:',
-    locationVal: isAr ? 'المملكة العربية السعودية' : 'Saudia Arabia',
-    email: isAr ? 'البريد الإلكتروني:' : 'Email:',
-    phone: isAr ? 'رقم الهاتف:' : 'Phone:',
-    writeToUs: isAr ? 'راسلنا' : 'WRITE TO US',
-    sendMsg: isAr ? 'أرسل لنا رسالة' : 'SEND US A MESSAGE',
-    placeholderName: isAr ? 'الاسم الكريم:' : 'Your Name:',
-    placeholderEmail: isAr ? 'البريد الإلكتروني:' : 'Your Email:',
-    placeholderMsg: isAr ? 'رسالتك:' : 'Message:',
-    sendNow: isAr ? 'أرسل الآن' : 'Send Now',
-  }
-
-  // -----------------------------------------------------
-  // صور المشاريع
-  // -----------------------------------------------------
   const englishProjectImages = [
     '/assets/images/S-lOC-USAGES-R3-08.jpg',
     '/assets/images/S-lOC-USAGES-R3-09.jpg',
@@ -259,8 +182,6 @@ export default function Home() {
   ]
 
   const projectImages = isAr ? arabicProjectImages : englishProjectImages
-
-  // -----------------------------------------------------
 
   const services = [
     {
@@ -410,13 +331,13 @@ export default function Home() {
       <section className="relative pt-24 pb-16 bg-gradient-to-b from-[#100324] via-[#100324] to-[#0a2e16] text-white flex flex-col justify-center">
         <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
           <h2 className="text-2xl md:text-4xl font-bold mb-4 flex justify-center items-center gap-2 flex-wrap">
-            {t.heroPre} <Typewriter words={t.heroWords} isAr={isAr} /> {t.heroPost}
+            {t('heroPre')} <Typewriter words={heroWords} isAr={isAr} /> {t('heroPost')}
           </h2>
           <h1 className="text-4xl md:text-[56px] font-extrabold leading-tight mb-6">
-            {t.heroTitle}
+            {t('heroTitle')}
           </h1>
-          <p className="text-sm md:text-base text-gray-300 mb-6 max-w-3xl mx-auto">{t.heroDesc}</p>
-          <p className="text-[#38e54d] text-sm italic font-medium mb-12">{t.heroPowered}</p>
+          <p className="text-sm md:text-base text-gray-300 mb-6 max-w-3xl mx-auto">{t('heroDesc')}</p>
+          <p className="text-[#38e54d] text-sm italic font-medium mb-12">{t('heroPowered')}</p>
 
           <div className="flex justify-center mb-10">
             <img
@@ -430,29 +351,29 @@ export default function Home() {
             href="/contact"
             className="bg-[#9b51e0] hover:bg-[#8645c4] text-white font-bold py-3 px-10 rounded-full transition-transform hover:scale-105 shadow-lg shadow-purple-500/30 mb-20 inline-block"
           >
-            {t.clickHere}
+            {t('clickHere')}
           </a>
 
-          <h2 className="text-3xl font-bold mb-10">{t.whatLook}</h2>
+          <h2 className="text-3xl font-bold mb-10">{t('whatLook')}</h2>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-8 w-full max-w-4xl mx-auto pb-10">
             <div className="flex flex-col items-center w-full">
-              <p className="font-semibold mb-4 text-lg">{t.findLoc}</p>
+              <p className="font-semibold mb-4 text-lg">{t('findLoc')}</p>
               <a
                 href="https://s-locator.northernacs.com/landing?"
                 target="_blank"
                 rel="noreferrer"
                 className="bg-gradient-to-r from-[#8eea9e] to-[#45c960] text-[#110222] font-bold py-3.5 px-8 rounded-full shadow-lg hover:scale-105 transition-all w-full md:w-auto text-center inline-block"
               >
-                {t.exploreLoc}
+                {t('exploreLoc')}
               </a>
             </div>
             <div className="flex flex-col items-center w-full">
-              <p className="font-semibold mb-4 text-lg">{t.planTerr}</p>
+              <p className="font-semibold mb-4 text-lg">{t('planTerr')}</p>
               <a
                 href="/territory-planning"
                 className="bg-gradient-to-r from-[#8eea9e] to-[#45c960] text-[#110222] font-bold py-3.5 px-8 rounded-full shadow-lg hover:scale-105 transition-all w-full md:w-auto text-center inline-block"
               >
-                {t.startTerr}
+                {t('startTerr')}
               </a>
             </div>
           </div>
@@ -464,11 +385,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 text-center">
           <FadeInSection>
             <h6 className="text-[#38e54d] font-semibold tracking-widest mb-2 text-sm uppercase">
-              {t.whatWeOffer}
+              {t('whatWeOffer')}
             </h6>
-            <h2 className="text-white text-4xl font-bold mb-6">{t.whyChoose}</h2>
+            <h2 className="text-white text-4xl font-bold mb-6">{t('whyChoose')}</h2>
             <p className="text-gray-300 max-w-3xl mx-auto mb-16 text-base leading-relaxed">
-              {t.chooseDesc}
+              {t('chooseDesc')}
             </p>
           </FadeInSection>
 
@@ -493,7 +414,7 @@ export default function Home() {
                     href={service.link}
                     className="bg-[#8eea9e] hover:bg-[#45c960] text-[#110222] font-bold py-2 px-6 rounded-full text-sm transition-colors mt-auto inline-block text-center w-max"
                   >
-                    {t.clickHere}
+                    {t('clickHere')}
                   </a>
                 </div>
               </FadeInSection>
@@ -508,11 +429,11 @@ export default function Home() {
           <FadeInSection>
             <div className={`lg:w-full z-20 ${isAr ? 'text-right' : 'text-left'}`}>
               <h6 className="text-[#2b1055] uppercase tracking-widest text-sm mb-4 font-semibold">
-                {t.achievements}
+                {t('achievements')}
               </h6>
               <h2 className="text-[#2b1055] text-4xl lg:text-[52px] font-extrabold mb-6 leading-[1.1]">
                 {isAr ? (
-                  <>{t.achievementsTitle}</>
+                  <>{t('achievementsTitle')}</>
                 ) : (
                   <>
                     Automate geospatial
@@ -525,17 +446,16 @@ export default function Home() {
                   </>
                 )}
               </h2>
-              <p className="text-gray-600 mb-10 text-lg max-w-md">{t.achievementsDesc}</p>
+              <p className="text-gray-600 mb-10 text-lg max-w-md">{t('achievementsDesc')}</p>
               <a
                 href="/contact"
                 className="bg-[#9b51e0] hover:bg-[#8645c4] text-white font-bold py-4 px-10 rounded-full flex items-center justify-center w-max gap-2 transition-transform hover:scale-105 shadow-xl shadow-purple-500/20"
               >
-                {t.getStarted} <span className="mx-1 text-xl font-light">{isAr ? '←' : '→'}</span>
+                {t('getStarted')} <span className="mx-1 text-xl font-light">{isAr ? '←' : '→'}</span>
               </a>
             </div>
           </FadeInSection>
 
-          {/* تبديل المواقع من اليمين لليسار إذا كانت اللغة عربية */}
           <div className="lg:w-1/2 relative w-full h-[600px] mt-10 lg:mt-0">
             <div
               className={`absolute top-[5%] ${isAr ? 'left-[15%]' : 'right-[15%]'} w-[160px] h-[160px] bg-[#38e54d] rounded-full flex flex-col items-center justify-center text-[#110222] shadow-[0_10px_30px_rgba(56,229,77,0.3)] hover:-translate-y-2 transition-transform z-20`}
@@ -546,7 +466,7 @@ export default function Home() {
               </h3>
               <p className="text-[10px] font-bold text-[#110222]/80 text-center uppercase mt-1">
                 {isAr ? (
-                  <>{t.projectsCompleted}</>
+                  <>{t('projectsCompleted')}</>
                 ) : (
                   <>
                     Projects
@@ -566,7 +486,7 @@ export default function Home() {
               </h3>
               <p className="text-[9px] font-bold text-[#110222]/80 text-center uppercase mt-1">
                 {isAr ? (
-                  <>{t.teamMembers}</>
+                  <>{t('teamMembers')}</>
                 ) : (
                   <>
                     Team
@@ -590,7 +510,7 @@ export default function Home() {
               </h3>
               <p className="text-[11px] font-bold text-[#110222]/80 text-center uppercase mt-1">
                 {isAr ? (
-                  <>{t.satisfiedClients}</>
+                  <>{t('satisfiedClients')}</>
                 ) : (
                   <>
                     Satisfied
@@ -610,7 +530,7 @@ export default function Home() {
               </h3>
               <p className="text-[9px] font-bold text-[#110222]/80 text-center uppercase mt-1">
                 {isAr ? (
-                  <>{t.awardsWin}</>
+                  <>{t('awardsWin')}</>
                 ) : (
                   <>
                     Awards
@@ -640,7 +560,7 @@ export default function Home() {
                   </span>
                   <span className="text-[10px] text-center leading-tight font-bold mt-1">
                     {isAr ? (
-                      <>{t.yearsExp}</>
+                      <>{t('yearsExp')}</>
                     ) : (
                       <>
                         Years of
@@ -659,17 +579,17 @@ export default function Home() {
             </div>
             <div className={`lg:w-1/2 py-8 ${isAr ? 'text-right' : 'text-left'}`}>
               <h2 className="text-[#38e54d] text-4xl md:text-[54px] font-bold mb-6 leading-[1.1]">
-                {t.compEdgeTitle}
+                {t('compEdgeTitle')}
               </h2>
-              <p className="text-white mb-6 font-semibold text-lg leading-snug">{t.compEdgeSub}</p>
+              <p className="text-white mb-6 font-semibold text-lg leading-snug">{t('compEdgeSub')}</p>
               <p className="text-gray-300 text-[15px] leading-relaxed mb-10 max-w-lg">
-                {t.compEdgeDesc}
+                {t('compEdgeDesc')}
               </p>
               <a
                 href="/about"
                 className="bg-gradient-to-r from-[#8eea9e] to-[#9b51e0] text-white font-bold py-3.5 px-8 rounded-full shadow-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 w-max"
               >
-                {t.readMore} <span className="font-light text-xl mx-1">{isAr ? '←' : '→'}</span>
+                {t('readMore')} <span className="font-light text-xl mx-1">{isAr ? '←' : '→'}</span>
               </a>
             </div>
           </div>
@@ -680,8 +600,8 @@ export default function Home() {
       <section className="py-24 bg-[#110222]">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <FadeInSection>
-            <h2 className="text-white text-[42px] font-bold mb-4">{t.tailoredTitle}</h2>
-            <p className="text-gray-300 mb-16 text-base">{t.tailoredDesc}</p>
+            <h2 className="text-white text-[42px] font-bold mb-4">{t('tailoredTitle')}</h2>
+            <p className="text-gray-300 mb-16 text-base">{t('tailoredDesc')}</p>
           </FadeInSection>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {industries.map((industry, index) => (
@@ -712,11 +632,11 @@ export default function Home() {
         <FadeInSection>
           <div className="pt-24 pb-12 text-center max-w-4xl mx-auto px-4">
             <h6 className="text-[#38e54d] font-bold tracking-widest text-[15px] mb-4 uppercase">
-              {t.recentProjects}
+              {t('recentProjects')}
             </h6>
-            <p className="text-[#2b1055] mb-8 font-medium text-lg">{t.recentDesc1}</p>
+            <p className="text-[#2b1055] mb-8 font-medium text-lg">{t('recentDesc1')}</p>
             <h2 className="text-[#2b1055] text-4xl md:text-[46px] font-extrabold">
-              {t.recentTitle}
+              {t('recentTitle')}
             </h2>
           </div>
         </FadeInSection>
@@ -724,15 +644,14 @@ export default function Home() {
         <div className="bg-gradient-to-b from-white to-[#1a0535] pt-10 pb-24 overflow-hidden">
           <FadeInSection>
             <div className="text-center max-w-4xl mx-auto px-4 mb-16">
-              <h2 className="text-[#2b1055] text-[40px] font-extrabold mb-4">{t.transformTitle}</h2>
-              <p className="text-gray-600 font-medium">{t.transformDesc}</p>
+              <h2 className="text-[#2b1055] text-[40px] font-extrabold mb-4">{t('transformTitle')}</h2>
+              <p className="text-gray-600 font-medium">{t('transformDesc')}</p>
             </div>
           </FadeInSection>
 
           {/* Infinite Marquee Slider with Popup Hover */}
           <div className="w-full relative py-4">
             <div className="animate-marquee hover:[animation-play-state:paused] flex gap-2">
-              {/* We double the array to create a seamless infinite loop effect */}
               {[...projectImages, ...projectImages].map((img, i) => (
                 <div
                   key={i}
@@ -743,8 +662,6 @@ export default function Home() {
                     alt={`Project ${i}`}
                     className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-
-                  {/* Overlay and Magnifier Icon on Hover */}
                   <div
                     onClick={() => setPopupImage(img)}
                     className="absolute inset-0 bg-[#2b1055]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10"
@@ -777,13 +694,13 @@ export default function Home() {
             </div>
 
             <div className={`md:w-2/3 pt-4 ${isAr ? 'text-right' : 'text-left'}`}>
-              <h2 className="text-[36px] font-bold text-[#2b1055] mb-6">{t.testTitle}</h2>
+              <h2 className="text-[36px] font-bold text-[#2b1055] mb-6">{t('testTitle')}</h2>
               <p className="text-gray-700 mb-8 text-[16px] leading-relaxed font-medium">
-                {t.testDesc}
+                {t('testDesc')}
               </p>
               <div>
-                <p className="font-bold text-[#2b1055] text-sm">{t.clientName}</p>
-                <p className="text-gray-500 text-xs mt-1 font-medium">{t.clientRole}</p>
+                <p className="font-bold text-[#2b1055] text-sm">{t('clientName')}</p>
+                <p className="text-gray-500 text-xs mt-1 font-medium">{t('clientRole')}</p>
               </div>
             </div>
           </div>
@@ -795,10 +712,10 @@ export default function Home() {
               className={`w-full lg:w-[40%] flex flex-col justify-center ${isAr ? 'text-right' : 'text-left'}`}
             >
               <h6 className="text-[13px] font-extrabold text-[#38e54d] mb-1 uppercase tracking-[0.2em]">
-                {t.contactInfo}
+                {t('contactInfo')}
               </h6>
               <h2 className="text-[40px] font-black text-[#2b1055] mb-10 leading-none">
-                {t.getInTouch}
+                {t('getInTouch')}
               </h2>
 
               <div className="space-y-4 w-full">
@@ -814,9 +731,9 @@ export default function Home() {
                   </div>
                   <div>
                     <h4 className="font-extrabold text-[#110222] text-[18px] mb-0.5">
-                      {t.location}
+                      {t('location')}
                     </h4>
-                    <p className="text-[#110222]/80 text-[15px] font-medium">{t.locationVal}</p>
+                    <p className="text-[#110222]/80 text-[15px] font-medium">{t('locationVal')}</p>
                   </div>
                 </div>
 
@@ -831,7 +748,7 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-0.5">{t.email}</h4>
+                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-0.5">{t('email')}</h4>
                     <p className="text-[#110222]/80 text-[15px] font-medium break-all" dir="ltr">
                       marketing@northernacs.com
                     </p>
@@ -849,7 +766,7 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-0.5">{t.phone}</h4>
+                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-0.5">{t('phone')}</h4>
                     <p className="text-[#110222]/80 text-[15px] font-medium" dir="ltr">
                       +966 56738077
                     </p>
@@ -861,10 +778,10 @@ export default function Home() {
             <div className="w-full lg:w-[60%]">
               <div className="bg-gradient-to-br from-[#44e460] to-[#8d42e0] p-10 md:p-12 rounded-xl shadow-2xl flex flex-col justify-center w-full min-h-[500px]">
                 <h6 className="text-[#110222]/40 text-[13px] font-extrabold mb-1 uppercase tracking-[0.15em]">
-                  {t.writeToUs}
+                  {t('writeToUs')}
                 </h6>
                 <h3 className="text-[#38e54d] text-[38px] font-black mb-8 uppercase tracking-wide drop-shadow-md leading-none">
-                  {t.sendMsg}
+                  {t('sendMsg')}
                 </h3>
 
                 <form onSubmit={handleContactSubmit} className="space-y-5">
@@ -872,21 +789,21 @@ export default function Home() {
                     type="text"
                     name="name"
                     required
-                    placeholder={t.placeholderName}
+                    placeholder={t('placeholderName')}
                     className={`w-full p-4 rounded bg-white text-gray-800 text-[15px] font-medium focus:outline-none shadow-sm ${isAr ? 'text-right' : 'text-left'}`}
                   />
                   <input
                     type="email"
                     name="email"
                     required
-                    placeholder={t.placeholderEmail}
+                    placeholder={t('placeholderEmail')}
                     className={`w-full p-4 rounded bg-white text-gray-800 text-[15px] font-medium focus:outline-none shadow-sm ${isAr ? 'text-right' : 'text-left'}`}
                   />
                   <textarea
                     name="message"
                     rows={6}
                     required
-                    placeholder={t.placeholderMsg}
+                    placeholder={t('placeholderMsg')}
                     className={`w-full p-4 rounded bg-white text-gray-800 text-[15px] font-medium focus:outline-none resize-none shadow-sm mb-2 ${isAr ? 'text-right' : 'text-left'}`}
                   ></textarea>
 
@@ -894,7 +811,7 @@ export default function Home() {
                     type="submit"
                     className="bg-[#f06e28] hover:bg-[#d55e1f] text-[#110222] font-bold py-3.5 px-8 rounded-md text-[16px] transition-colors shadow-lg"
                   >
-                    {t.sendNow}
+                    {t('sendNow')}
                   </button>
                 </form>
               </div>
@@ -903,6 +820,7 @@ export default function Home() {
         </FadeInSection>
       </section>
 
+      {/* Popup Modal */}
       {popupImage && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md"

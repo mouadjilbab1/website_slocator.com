@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
-// =========================================
-// Helper Component: Fade In Animation on Scroll
-// =========================================
-const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
+// --- Interfaces ---
+interface FadeInSectionProps {
+  children: React.ReactNode
+  delay?: number
+}
+
+// --- Helper Component: Fade In Animation on Scroll ---
+const FadeInSection: React.FC<FadeInSectionProps> = ({ children, delay = 0 }) => {
   const [isVisible, setVisible] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
 
@@ -25,7 +30,9 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode; del
   return (
     <div
       ref={domRef}
-      className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+      className={`transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      }`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
@@ -33,44 +40,16 @@ const FadeInSection = ({ children, delay = 0 }: { children: React.ReactNode; del
   )
 }
 
-// =========================================
-// Main Contact Page Component
-// =========================================
+// --- Main Contact Page Component ---
 export default function Contact() {
-  const [lang] = useState(() => localStorage.getItem('site_lang') || 'en')
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language === 'ar'
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  const isAr = lang === 'ar'
-
-  // -----------------------------------------
-  // القاموس (Dictionary) لدعم اللغتين
-  // -----------------------------------------
-  const t = {
-    heroTitle: isAr ? 'اتصل بنا' : 'Contact Us',
-    home: isAr ? 'الرئيسية' : 'Home',
-    contact: isAr ? 'اتصل بنا' : 'Contact',
-
-    contactInfo: isAr ? 'معلومات الاتصال' : 'CONTACT INFO',
-    getInTouch: isAr ? 'تواصل معنا' : 'GET IN TOUCH',
-
-    location: isAr ? 'الموقع:' : 'Location:',
-    locationVal: isAr ? 'المملكة العربية السعودية' : 'Saudia Arabia',
-
-    email: isAr ? 'البريد الإلكتروني:' : 'Email:',
-    phone: isAr ? 'رقم الهاتف:' : 'Phone:',
-
-    writeToUs: isAr ? 'راسلنا' : 'WRITE TO US',
-    sendMsg: isAr ? 'أرسل لنا رسالة' : 'SEND US A MESSAGE',
-
-    placeholderName: isAr ? 'الاسم الكريم:' : 'Your Name:',
-    placeholderEmail: isAr ? 'البريد الإلكتروني:' : 'Your Email:',
-    placeholderMsg: isAr ? 'رسالتك:' : 'Message:',
-    sendNow: isAr ? 'أرسل الآن' : 'Send Now',
-  }
-
-  // دالة التعامل مع إرسال النموذج (فتح الإيميل)
+  // Handle form submission and redirect to default mail client
   const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
@@ -78,14 +57,11 @@ export default function Contact() {
     const email = formData.get('email')
     const message = formData.get('message')
 
-    const subject = encodeURIComponent(
-      `${isAr ? 'رسالة تواصل جديدة من' : 'New Contact Message from'} ${name}`,
-    )
+    const subject = encodeURIComponent(`${t('newContactMsg')} ${name}`)
     const body = encodeURIComponent(
-      `${isAr ? 'الاسم:' : 'Name:'} ${name}\n${isAr ? 'البريد:' : 'Email:'} ${email}\n\n${isAr ? 'الرسالة:' : 'Message:'}\n${message}`,
+      `${t('namePrefix')} ${name}\n${t('emailPrefix')} ${email}\n\n${t('msgPrefix')}\n${message}`
     )
 
-    // يوجه المستخدم لعميل البريد الافتراضي
     window.location.href = `mailto:admin@s-locator.com?subject=${subject}&body=${body}`
   }
 
@@ -105,14 +81,14 @@ export default function Contact() {
         <div className="relative z-10 text-center px-4 mt-10">
           <FadeInSection>
             <h1 className="text-5xl md:text-[64px] font-extrabold text-white mb-6 drop-shadow-lg tracking-tight">
-              {t.heroTitle}
+              {t('contactHeroTitle')}
             </h1>
             <div className="flex items-center justify-center gap-3 text-gray-300 font-bold text-[13px] uppercase tracking-widest">
               <a href="/" className="hover:text-[#38e54d] transition-colors">
-                {t.home}
+                {t('Home')}
               </a>
               <span className="text-gray-500">/</span>
-              <span className="text-[#38e54d]">{t.contact}</span>
+              <span className="text-[#38e54d]">{t('Contact')}</span>
             </div>
           </FadeInSection>
         </div>
@@ -123,14 +99,16 @@ export default function Contact() {
         <div className="max-w-6xl mx-auto px-4 flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* Left Side: Green Contact Info Cards */}
           <div
-            className={`w-full lg:w-[40%] flex flex-col justify-center ${isAr ? 'text-right' : 'text-left'}`}
+            className={`w-full lg:w-[40%] flex flex-col justify-center ${
+              isAr ? 'text-right' : 'text-left'
+            }`}
           >
             <FadeInSection>
               <h6 className="text-[13px] font-extrabold text-[#38e54d] mb-2 uppercase tracking-[0.2em]">
-                {t.contactInfo}
+                {t('contactInfo')}
               </h6>
               <h2 className="text-[42px] font-black text-[#2b1055] mb-10 leading-none tracking-tight">
-                {t.getInTouch}
+                {t('getInTouch')}
               </h2>
 
               <div className="space-y-5 w-full">
@@ -144,8 +122,8 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-1">{t.location}</h4>
-                    <p className="text-[#110222]/80 text-[15px] font-semibold">{t.locationVal}</p>
+                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-1">{t('location')}</h4>
+                    <p className="text-[#110222]/80 text-[15px] font-semibold">{t('locationVal')}</p>
                   </div>
                 </div>
 
@@ -159,7 +137,7 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-1">{t.email}</h4>
+                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-1">{t('email')}</h4>
                     <p
                       className="text-[#110222]/80 text-[15px] font-semibold leading-relaxed"
                       dir="ltr"
@@ -181,14 +159,12 @@ export default function Contact() {
                     />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-1">{t.phone}</h4>
+                    <h4 className="font-extrabold text-[#110222] text-[18px] mb-1">{t('phone')}</h4>
                     <p
                       className="text-[#110222]/80 text-[15px] font-semibold leading-relaxed"
                       dir="ltr"
                     >
-                      +012 (345) 678 99
-                      <br />
-                      +12345678 478 58
+                      +966 56738077
                     </p>
                   </div>
                 </div>
@@ -201,14 +177,18 @@ export default function Contact() {
             <FadeInSection delay={200}>
               <div className="bg-gradient-to-br from-[#44e460] to-[#8d42e0] p-10 md:p-14 rounded-2xl shadow-[0_20px_50px_rgba(141,66,224,0.25)] flex flex-col justify-center w-full min-h-[550px]">
                 <h6
-                  className={`text-[#110222]/50 text-[12px] font-extrabold mb-2 uppercase tracking-[0.2em] ${isAr ? 'text-right' : 'text-left'}`}
+                  className={`text-[#110222]/50 text-[12px] font-extrabold mb-2 uppercase tracking-[0.2em] ${
+                    isAr ? 'text-right' : 'text-left'
+                  }`}
                 >
-                  {t.writeToUs}
+                  {t('writeToUs')}
                 </h6>
                 <h3
-                  className={`text-[#38e54d] text-[40px] font-black mb-10 uppercase tracking-tight drop-shadow-md leading-none ${isAr ? 'text-right' : 'text-left'}`}
+                  className={`text-[#38e54d] text-[40px] font-black mb-10 uppercase tracking-tight drop-shadow-md leading-none ${
+                    isAr ? 'text-right' : 'text-left'
+                  }`}
                 >
-                  {t.sendMsg}
+                  {t('sendMsg')}
                 </h3>
 
                 <form onSubmit={handleContactSubmit} className="space-y-6">
@@ -216,22 +196,28 @@ export default function Contact() {
                     type="text"
                     name="name"
                     required
-                    placeholder={t.placeholderName}
-                    className={`w-full p-4 rounded-lg bg-white text-gray-800 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-[#f06e28] shadow-sm transition-all ${isAr ? 'text-right' : 'text-left'}`}
+                    placeholder={t('placeholderName')}
+                    className={`w-full p-4 rounded-lg bg-white text-gray-800 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-[#f06e28] shadow-sm transition-all ${
+                      isAr ? 'text-right' : 'text-left'
+                    }`}
                   />
                   <input
                     type="email"
                     name="email"
                     required
-                    placeholder={t.placeholderEmail}
-                    className={`w-full p-4 rounded-lg bg-white text-gray-800 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-[#f06e28] shadow-sm transition-all ${isAr ? 'text-right' : 'text-left'}`}
+                    placeholder={t('placeholderEmail')}
+                    className={`w-full p-4 rounded-lg bg-white text-gray-800 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-[#f06e28] shadow-sm transition-all ${
+                      isAr ? 'text-right' : 'text-left'
+                    }`}
                   />
                   <textarea
                     name="message"
                     rows={6}
                     required
-                    placeholder={t.placeholderMsg}
-                    className={`w-full p-4 rounded-lg bg-white text-gray-800 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-[#f06e28] resize-none shadow-sm transition-all ${isAr ? 'text-right' : 'text-left'}`}
+                    placeholder={t('placeholderMsg')}
+                    className={`w-full p-4 rounded-lg bg-white text-gray-800 text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-[#f06e28] resize-none shadow-sm transition-all ${
+                      isAr ? 'text-right' : 'text-left'
+                    }`}
                   ></textarea>
 
                   <div className={isAr ? 'text-right' : 'text-left'}>
@@ -239,7 +225,7 @@ export default function Contact() {
                       type="submit"
                       className="bg-[#f06e28] hover:bg-[#d55e1f] text-white font-extrabold py-4 px-10 rounded-lg text-[16px] transition-transform hover:-translate-y-1 shadow-[0_10px_20px_rgba(240,110,40,0.3)] mt-2 inline-block"
                     >
-                      {t.sendNow}
+                      {t('sendNow')}
                     </button>
                   </div>
                 </form>

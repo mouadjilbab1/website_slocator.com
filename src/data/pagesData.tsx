@@ -18,11 +18,23 @@ import {
   MonitorSmartphone,
 } from 'lucide-react'
 
-// ==========================================
-// 1. بيانات المقالات (Articles Data)
-// ==========================================
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const articlesData: Record<string, any> = {
+export interface LocalizedArticle {
+  category: string
+  title: string
+  date: string
+  author: string
+  excerpt: string
+  tags?: string[]
+  content: React.ReactNode
+}
+
+export interface ArticleData {
+  image: string
+  en: LocalizedArticle
+  ar: LocalizedArticle
+}
+
+export const articlesData: Record<string, ArticleData> = {
   'feasibility-study-riyadh-guide': {
     image: '/assets/images/Feasibility-Study-in-Riyadh-768x419.jpg',
     en: {
@@ -747,8 +759,41 @@ export const articlesData: Record<string, any> = {
 // ==========================================
 // 2. بيانات الخدمات (Solutions Data)
 // ==========================================
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const solutionsData: Record<string, any> = {
+
+export interface UseCaseData {
+  icon: React.ReactNode
+  title: string
+  desc: string
+}
+
+export interface LocalizedSolution {
+  titlePart1: string
+  titlePart2: string
+  titlePart3: string
+  heroDesc: string
+  featuresList: string[]
+  useCasesList: UseCaseData[]
+  detTitle1: string
+  detDesc1: string
+  detTitle2: string
+  detDesc2: string
+  detTitle3: string
+  detDesc3: string
+  testQuote: string
+  testName: string
+  testRole: string
+}
+
+export interface SolutionData {
+  heroImage: string
+  detImg1: string
+  detImg2: string
+  detImg3: string
+  en: LocalizedSolution
+  ar: LocalizedSolution
+}
+
+export const solutionsData: Record<string, SolutionData> = {
   // ----------------------------------------
   // الخدمة 1: محدد نقاط الاهتمام
   // ----------------------------------------
